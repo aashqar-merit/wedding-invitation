@@ -324,16 +324,16 @@ body.gated main *,body.gated #petal,body.gated footer *,body.gated #sound{
     </div>
   </div>
 
-  <div class="phrase">يتشرفان بدعوتكم لحضور حفل زفاف</div>
+  <div class="phrase">يتشرفان بدعوتكم لحضور حفل الزفاف</div>
 
   <div class="families couple">
     <div class="side">
-      <span class="rel">نجله</span>
+      <span class="rel">ونجله</span>
       <span class="child" id="nGroom">عبدالرحمن</span>
     </div>
     <span class="wa-orn">&amp;</span>
     <div class="side">
-      <span class="rel">كريمته</span>
+      <span class="rel">وكريمته</span>
       <span class="child" id="nBride">جنى</span>
     </div>
   </div>
@@ -519,8 +519,47 @@ $("calBtn").addEventListener("click", () => {
     gate.classList.add("away");
     audio.play().then(() => { fadeIn(); mark(); }).catch(() => { mark(); armGesture(); });
     setTimeout(() => gate.remove(), 1000);
+    setTimeout(() => autoScroll.start(), 3000);   // بعد ظهور الغلاف كاملًا
   }
   gateBtn.addEventListener("click", openInvitation);
+})();
+
+/* ═══ التمرير التلقائي ═══
+   يمشي ببطء بعد فتح الدعوة، ويتوقف ٧ ثوانٍ إذا مرّر الزائر بنفسه. */
+const autoScroll = (function(){
+  const SPEED = 40;      // بكسل في الثانية
+  const PAUSE = 5000;    // مدة التوقف بعد تدخّل الزائر
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let running = false, resumeAt = 0, last = null, pos = 0;
+
+  const atBottom = () =>
+    window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+
+  function frame(ts){
+    if (!running) return;
+    if (last === null) { last = ts; pos = window.scrollY; }
+    const dt = Math.min((ts - last) / 1000, 0.1); last = ts;
+
+    if (Date.now() < resumeAt) pos = window.scrollY;   // الزائر يقود الآن
+    else if (!atBottom()) {
+      pos += SPEED * dt;
+      window.scrollTo(0, pos);
+    } else pos = window.scrollY;
+
+    requestAnimationFrame(frame);
+  }
+
+  function hold(){ resumeAt = Date.now() + PAUSE; }
+  ["wheel","touchstart","touchmove","keydown","pointerdown"]
+    .forEach(e => addEventListener(e, hold, { passive:true }));
+
+  return {
+    start(){
+      if (reduce || running) return;
+      running = true; last = null; resumeAt = 0;
+      requestAnimationFrame(frame);
+    }
+  };
 })();
 
 const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add("in")), { threshold: .15 });
