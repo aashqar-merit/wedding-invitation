@@ -108,11 +108,11 @@ p+p{margin-top:12px}
   column-gap:clamp(6px,2.6vw,22px);align-items:stretch;text-align:center;
 }
 .side{display:flex;flex-direction:column;align-items:center;gap:6px}
-.honor{font-size:clamp(.68rem,2.6vw,.8rem);font-weight:600;color:var(--ink);opacity:.7}
-.hname{font-family:"Aref Ruqaa",serif;font-size:clamp(.95rem,3.9vw,1.4rem);
+.honor{font-size:clamp(.68rem,2.6vw,.95rem);font-weight:600;color:var(--ink);opacity:.7}
+.hname{font-family:"Aref Ruqaa",serif;font-size:clamp(.95rem,3.9vw,1.5rem);
   color:var(--deep);line-height:1.6}
 .dot{font-size:.5rem;color:var(--ink);opacity:.45;margin:4px 0 2px}
-.rel{font-size:clamp(.68rem,2.6vw,.8rem);font-weight:600;color:var(--ink);opacity:.7}
+.rel{font-size:clamp(.68rem,2.6vw,.95rem);font-weight:600;color:var(--ink);opacity:.7}
 .child{font-family:"Aref Ruqaa",serif;font-size:clamp(1.3rem,6.2vw,2.1rem);
   color:var(--deep);line-height:1.5}
 .join{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:4px 0}
@@ -139,12 +139,12 @@ p+p{margin-top:12px}
 .pic{width:clamp(122px,32vw,178px);background:#fff;padding:8px 8px 0;
      box-shadow:0 14px 30px rgba(65,61,58,.09);transition:transform .6s cubic-bezier(.2,.7,.3,1)}
 .pic img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;filter:grayscale(.55) contrast(.98) brightness(1.03)}
-.pic figcaption{font-family:"Aref Ruqaa",serif;font-size:.8rem;color:var(--ink);padding:9px 0 11px;text-align:center}
+.pic figcaption{font-family:"Aref Ruqaa",serif;font-size:1rem;color:var(--ink);padding:9px 0 11px;text-align:center}
 .pic:hover{transform:translateY(-7px)}
 .cap{margin-top:20px;font-size:.86rem;font-weight:500;letter-spacing:0;word-spacing:.14em;color:var(--deep);opacity:.9}
 
 /* التاريخ */
-.dayname{font-size:.8rem;font-weight:600;letter-spacing:0;word-spacing:.16em;opacity:.9;margin-bottom:12px}
+.dayname{font-size:1rem;font-weight:600;letter-spacing:0;word-spacing:.16em;opacity:.9;margin-bottom:12px}
 .bigdate{font-family:"Aref Ruqaa",serif;font-size:clamp(1.6rem,6.4vw,2.6rem);color:var(--deep);line-height:1.6}
 .timetext{margin-top:8px;letter-spacing:0;font-size:1.02rem;font-weight:500;opacity:.95}
 
@@ -199,6 +199,32 @@ footer small{display:block;margin-top:18px;font-size:.62rem;letter-spacing:.4em;
 @keyframes pulse{0%{transform:scale(.9);opacity:.7}100%{transform:scale(1.35);opacity:0}}
 @media(max-width:480px){#sound{width:46px;height:46px;bottom:16px;left:16px}}
 
+/* الشاشة الافتتاحية */
+body.gated{overflow:hidden}
+body.gated main *,body.gated #petal,body.gated footer *,body.gated #sound{
+  animation-play-state:paused!important;
+}
+#gate{
+  position:fixed;inset:0;z-index:30;background:var(--paper);
+  display:grid;place-items:center;text-align:center;padding:30px;
+  transition:opacity .9s ease,visibility .9s ease;
+}
+#gate.away{opacity:0;visibility:hidden}
+#gate .gring{width:clamp(110px,26vw,150px);height:auto;margin:0 auto 26px;display:block}
+#gate .gring circle{fill:none;stroke:var(--ink);stroke-width:1.5;opacity:.55}
+#gate .gring text{font-family:"Cormorant Garamond",serif;fill:var(--deep)}
+#gate .gtitle{font-family:"Aref Ruqaa",serif;font-size:clamp(1.3rem,5vw,1.9rem);
+  color:var(--deep);line-height:1.7}
+#gate .gsub{margin-top:10px;font-size:.9rem;font-weight:500;color:var(--ink);opacity:.8}
+#gate .gbtn{
+  margin-top:34px;appearance:none;cursor:pointer;
+  font-family:"Tajawal",sans-serif;font-weight:600;font-size:1rem;
+  padding:14px 38px;color:var(--paper);background:var(--deep);
+  border:1px solid var(--deep);transition:transform .25s ease,background .3s ease;
+}
+#gate .gbtn:hover{transform:translateY(-2px);background:#242120}
+#gate .ghint{margin-top:16px;font-size:.75rem;color:var(--ink);opacity:.6}
+
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
   .reveal{opacity:1;transform:none}
@@ -208,6 +234,21 @@ footer small{display:block;margin-top:18px;font-size:.62rem;letter-spacing:.4em;
 </style>
 </head>
 <body>
+
+<div id="gate">
+  <div>
+    <svg class="gring" viewBox="0 0 220 220" aria-hidden="true">
+      <circle cx="110" cy="110" r="86"/>
+      <text x="76" y="146" text-anchor="middle" font-size="104">A</text>
+      <text x="110" y="140" text-anchor="middle" font-size="34">&amp;</text>
+      <text x="146" y="146" text-anchor="middle" font-size="104">J</text>
+    </svg>
+    <div class="gtitle">عبدالرحمن &amp; جنى</div>
+    <div class="gsub">يسعدنا دعوتكم لحضور حفل زفافنا</div>
+    <button class="gbtn" id="gateBtn" type="button">افتح الدعوة</button>
+    <div class="ghint">♪ يُفضَّل تشغيل الصوت</div>
+  </div>
+</div>
 
 <!-- بتلة زهرة كبيرة في الخلفية -->
 <svg id="petal" viewBox="0 0 1000 1400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -449,10 +490,6 @@ $("calBtn").addEventListener("click", () => {
   }
   const mark = () => btn.dataset.playing = (!audio.paused).toString();
 
-  function start(){
-    const p = audio.play();
-    if (p) p.then(() => { fadeIn(); mark(); }).catch(() => { mark(); armGesture(); });
-  }
   function armGesture(){
     const go = () => { audio.play().then(() => { fadeIn(); mark(); }).catch(()=>{}); off(); };
     const off = () => ["pointerdown","touchstart","keydown"].forEach(e => document.removeEventListener(e, go));
@@ -470,7 +507,17 @@ $("calBtn").addEventListener("click", () => {
     if (document.hidden && !audio.paused) { audio.pause(); mark(); }
   });
 
-  start();
+  // الشاشة الافتتاحية: ضغطة الزائر هي ما يسمح للمتصفح بتشغيل الصوت
+  const gate = $("gate"), gateBtn = $("gateBtn");
+  document.body.classList.add("gated");
+
+  function openInvitation(){
+    document.body.classList.remove("gated");
+    gate.classList.add("away");
+    audio.play().then(() => { fadeIn(); mark(); }).catch(() => { mark(); armGesture(); });
+    setTimeout(() => gate.remove(), 1000);
+  }
+  gateBtn.addEventListener("click", openInvitation);
 })();
 
 const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add("in")), { threshold: .15 });
