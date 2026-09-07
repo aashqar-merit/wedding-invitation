@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>دعوة زفاف عبدالرحمن وجنى</title>
-<meta name="description" content="يتشرف أحمد الأشقر وخالد العنزي بدعوتكم لحضور حفل زفاف عبدالرحمن وجنى — الأحد ٤ أكتوبر ٢٠٢٦، صالة الشرق، القاعة الملوكية.">
+<meta name="description" content="يتشرف أحمد محمد الأشقر وخالد محمود العنزي بدعوتكم لحضور حفل زفاف عبدالرحمن وجنى — الأحد ٤ أكتوبر ٢٠٢٦، صالة الشرق، القاعة الملوكية.">
 <link rel="canonical" href="https://abdalrahman-jana.love/">
 
 <!-- بطاقة المعاينة عند مشاركة الرابط -->
@@ -23,6 +23,10 @@
 <meta name="twitter:description" content="الأحد ٤ أكتوبر ٢٠٢٦ — صالة الشرق، القاعة الملوكية.">
 <meta name="twitter:image" content="https://abdalrahman-jana.love/og.jpg">
 <meta name="theme-color" content="#EFEDE9">
+
+<!-- أيقونة الموقع: خاتما الزفاف -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%23EFEDE9%22%2F%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23332F2C%22%20stroke-width%3D%222.1%22%3E%3Ccircle%20cx%3D%2212.4%22%20cy%3D%2219%22%20r%3D%227.2%22%2F%3E%3Ccircle%20cx%3D%2219.6%22%20cy%3D%2219%22%20r%3D%227.2%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M19.6%205.6%20L22.5%209.2%20L19.6%2012.8%20L16.7%209.2%20Z%22%20fill%3D%22%23332F2C%22%2F%3E%3C%2Fsvg%3E">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Tajawal:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -51,7 +55,7 @@ body{
 
 main{position:relative;z-index:1}
 section{max-width:780px;margin:0 auto;padding:clamp(66px,10vw,120px) 30px;text-align:center}
-.eyebrow{font-size:.78rem;font-weight:600;letter-spacing:0;word-spacing:.18em;color:var(--deep);opacity:.9;margin-bottom:16px}
+.eyebrow{font-size:1rem;font-weight:600;letter-spacing:0;word-spacing:.18em;color:var(--deep);opacity:.9;margin-bottom:16px}
 .hr{width:44px;height:1px;background:var(--hair);margin:0 auto 34px}
 p{font-size:clamp(1rem,2.6vw,1.08rem);color:rgba(51,47,44,.92);font-weight:400}
 p+p{margin-top:12px}
@@ -119,11 +123,11 @@ p+p{margin-top:12px}
   line-height:1;display:inline-block;transform:rotate(-9deg);
 }
 .phrase{margin-top:30px;font-size:clamp(1rem,2.9vw,1.12rem);font-weight:500;color:var(--ink)}
-.laurel{width:clamp(170px,44vw,250px);height:auto;display:block;margin:10px auto 0;
+.laurel{width:clamp(170px,44vw,250px);height:auto;display:block;margin:26px auto 0;
   fill:none;stroke:var(--ink);stroke-width:1.3;opacity:.7}
 .laurel .lf{fill:var(--ink);stroke:none;opacity:.55}
-.bless{margin-top:18px;font-family:"Aref Ruqaa",serif;font-size:clamp(.95rem,3vw,1.2rem);
-  color:var(--deep);opacity:.85}
+.bless{font-family:"Aref Ruqaa",serif;font-size:clamp(1.05rem,3.4vw,1.35rem);
+  color:var(--deep);opacity:.9;margin-bottom:16px;line-height:1.7}
 
 /* أسماء عربية */
 .arname{font-family:"Aref Ruqaa",serif;font-size:clamp(1.5rem,5.4vw,2.2rem);color:var(--deep);line-height:1.7}
@@ -169,6 +173,31 @@ p+p{margin-top:12px}
 footer{text-align:center;padding:80px 30px 100px;position:relative;z-index:1}
 footer .dua{font-family:"Aref Ruqaa",serif;font-size:clamp(1rem,3.2vw,1.3rem);color:var(--deep);line-height:2}
 footer small{display:block;margin-top:18px;font-size:.62rem;letter-spacing:.4em;opacity:.5;direction:ltr}
+
+/* زر الموسيقى */
+#sound{
+  position:fixed;bottom:20px;left:20px;z-index:9;
+  width:52px;height:52px;border-radius:50%;
+  display:grid;place-items:center;cursor:pointer;
+  background:rgba(239,237,233,.86);backdrop-filter:blur(8px);
+  border:1px solid var(--hair);color:var(--deep);
+  box-shadow:0 6px 20px rgba(51,47,44,.12);
+  transition:transform .3s ease,background .3s ease,opacity .6s ease;
+  opacity:0;animation:soft 1.2s ease 3.4s forwards;
+}
+#sound:hover{transform:translateY(-3px);background:rgba(239,237,233,.98)}
+#sound svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+#sound .off{display:none}
+#sound[data-playing="false"] .on{display:none}
+#sound[data-playing="false"] .off{display:block}
+#sound[data-playing="true"]::after{
+  content:"";position:absolute;inset:-5px;border-radius:50%;
+  border:1px solid var(--accent-ring,rgba(51,47,44,.28));
+  animation:pulse 2.6s ease-out infinite;
+}
+@keyframes pulse{0%{transform:scale(.9);opacity:.7}100%{transform:scale(1.35);opacity:0}}
+@media(max-width:480px){#sound{width:46px;height:46px;bottom:16px;left:16px}}
 
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
@@ -242,7 +271,7 @@ footer small{display:block;margin-top:18px;font-size:.62rem;letter-spacing:.4em;
   <div class="families">
     <div class="side">
       <span class="honor">السيد</span>
-      <span class="hname">أحمد الأشقر</span>
+      <span class="hname">أحمد محمد الأشقر</span>
       <span class="dot">◆</span>
       <span class="rel">ونجله</span>
       <span class="child" id="nGroom">عبدالرحمن</span>
@@ -256,7 +285,7 @@ footer small{display:block;margin-top:18px;font-size:.62rem;letter-spacing:.4em;
 
     <div class="side">
       <span class="honor">السيد</span>
-      <span class="hname">خالد العنزي</span>
+      <span class="hname">خالد محمود العنزي</span>
       <span class="dot">◆</span>
       <span class="rel">وكريمته</span>
       <span class="child" id="nBride">جنى</span>
@@ -278,7 +307,6 @@ footer small{display:block;margin-top:18px;font-size:.62rem;letter-spacing:.4em;
     </g>
   </svg>
 
-  <div class="bless">وذلك بمشيئة الله تعالى</div>
 </section>
 
 <section class="reveal">
@@ -293,7 +321,7 @@ footer small{display:block;margin-top:18px;font-size:.62rem;letter-spacing:.4em;
 </section>
 
 <section class="reveal">
-  <div class="eyebrow">الموعد</div>
+  <div class="bless">وذلك بمشيئة الله تعالى</div>
   <div class="hr"></div>
   <div class="dayname" id="dayName">—</div>
   <div class="bigdate" id="bigDate">—</div>
@@ -328,6 +356,17 @@ footer small{display:block;margin-top:18px;font-size:.62rem;letter-spacing:.4em;
   <div class="dua">بارك الله لهما وبارك عليهما وجمع بينهما في خير</div>
   <small id="footNames"></small>
 </footer>
+
+<audio id="bgm" src="music.mp3" loop preload="auto"></audio>
+<button id="sound" data-playing="false" aria-label="تشغيل أو إيقاف الموسيقى" title="الموسيقى">
+  <svg class="on" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/>
+  </svg>
+  <svg class="off" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/>
+    <path d="M3 3l18 18"/>
+  </svg>
+</button>
 
 <script>
 const CONFIG = {
@@ -391,6 +430,48 @@ $("calBtn").addEventListener("click", () => {
       "&details=" + encodeURIComponent("يسعدنا حضوركم"), "_blank", "noopener");
   }
 });
+
+/* ═══ موسيقى الخلفية ═══
+   المتصفحات تمنع التشغيل التلقائي بصوت، فنحاول أولًا،
+   وإن رُفض نشغّلها عند أول لمسة من الزائر. */
+(function(){
+  const audio = $("bgm"), btn = $("sound"), TARGET = 0.32;
+  if (!audio || !btn) return;
+  let faded = false;
+
+  function fadeIn(){
+    if (faded) return; faded = true;
+    audio.volume = 0;
+    const step = setInterval(() => {
+      audio.volume = Math.min(TARGET, audio.volume + 0.02);
+      if (audio.volume >= TARGET) clearInterval(step);
+    }, 90);
+  }
+  const mark = () => btn.dataset.playing = (!audio.paused).toString();
+
+  function start(){
+    const p = audio.play();
+    if (p) p.then(() => { fadeIn(); mark(); }).catch(() => { mark(); armGesture(); });
+  }
+  function armGesture(){
+    const go = () => { audio.play().then(() => { fadeIn(); mark(); }).catch(()=>{}); off(); };
+    const off = () => ["pointerdown","touchstart","keydown"].forEach(e => document.removeEventListener(e, go));
+    ["pointerdown","touchstart","keydown"].forEach(e => document.addEventListener(e, go, { once:true, passive:true }));
+  }
+
+  btn.addEventListener("click", e => {
+    e.stopPropagation();
+    if (audio.paused) { audio.play().then(() => { fadeIn(); mark(); }).catch(()=>{}); }
+    else { audio.pause(); mark(); }
+  });
+  audio.addEventListener("play", mark);
+  audio.addEventListener("pause", mark);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden && !audio.paused) { audio.pause(); mark(); }
+  });
+
+  start();
+})();
 
 const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add("in")), { threshold: .15 });
 document.querySelectorAll(".reveal").forEach(el => io.observe(el));
