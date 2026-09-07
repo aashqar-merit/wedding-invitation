@@ -324,16 +324,16 @@ body.gated main *,body.gated #petal,body.gated footer *,body.gated #sound{
     </div>
   </div>
 
-  <div class="phrase">يتشرفان بدعوتكم لحضور حفل الزفاف</div>
+  <div class="phrase">يتشرفان بدعوتكم لحضور حفل زفاف</div>
 
   <div class="families couple">
     <div class="side">
-      <span class="rel">ونجله</span>
+      <span class="rel">نجله</span>
       <span class="child" id="nGroom">عبدالرحمن</span>
     </div>
     <span class="wa-orn">&amp;</span>
     <div class="side">
-      <span class="rel">وكريمته</span>
+      <span class="rel">كريمته</span>
       <span class="child" id="nBride">جنى</span>
     </div>
   </div>
@@ -519,7 +519,7 @@ $("calBtn").addEventListener("click", () => {
     gate.classList.add("away");
     audio.play().then(() => { fadeIn(); mark(); }).catch(() => { mark(); armGesture(); });
     setTimeout(() => gate.remove(), 1000);
-    setTimeout(() => autoScroll.start(), 3000);   // بعد ظهور الغلاف كاملًا
+    setTimeout(() => autoScroll.start(), 2000);   // بعد ظهور الغلاف كاملًا
   }
   gateBtn.addEventListener("click", openInvitation);
 })();
@@ -527,7 +527,7 @@ $("calBtn").addEventListener("click", () => {
 /* ═══ التمرير التلقائي ═══
    يمشي ببطء بعد فتح الدعوة، ويتوقف ٧ ثوانٍ إذا مرّر الزائر بنفسه. */
 const autoScroll = (function(){
-  const SPEED = 40;      // بكسل في الثانية
+  const SPEED = 60;      // بكسل في الثانية
   const PAUSE = 5000;    // مدة التوقف بعد تدخّل الزائر
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let running = false, resumeAt = 0, last = null, pos = 0;
