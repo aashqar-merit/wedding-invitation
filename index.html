@@ -567,7 +567,7 @@ $("calBtn").addEventListener("click", () => {
 /* ═══ التمرير التلقائي ═══
    يمشي ببطء بعد فتح الدعوة، ويتوقف ٧ ثوانٍ إذا مرّر الزائر بنفسه. */
 const autoScroll = (function(){
-  const SPEED = 60;      // بكسل في الثانية
+  const SPEED = 50;      // بكسل في الثانية
   const PAUSE = 5000;    // مدة التوقف بعد تدخّل الزائر
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let running = false, resumeAt = 0, last = null, pos = 0;
