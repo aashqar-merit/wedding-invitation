@@ -564,7 +564,7 @@ $("calBtn").addEventListener("click", () => {
 /* ═══ التمرير التلقائي ═══
    يمشي ببطء بعد فتح الدعوة، ويتوقف ٧ ثوانٍ إذا مرّر الزائر بنفسه. */
 const autoScroll = (function(){
-  const SPEED = 60;      // بكسل في الثانية
+  const SPEED = 50;      // بكسل في الثانية
   const PAUSE = 5000;    // مدة التوقف بعد تدخّل الزائر
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let running = false, resumeAt = 0, last = null, pos = 0;
@@ -580,7 +580,7 @@ const autoScroll = (function(){
     if (Date.now() < resumeAt) pos = window.scrollY;   // الزائر يقود الآن
     else if (!atBottom()) {
       pos += SPEED * dt;
-      window.scrollTo(0, pos);
+      window.scrollTo({ top: pos, behavior: "instant" });  // "smooth" العام يعطّل الحركة
     } else pos = window.scrollY;
 
     requestAnimationFrame(frame);
@@ -610,20 +610,25 @@ const autoScroll = (function(){
   const esc = s => String(s).replace(/[&<>"]/g, c =>
     ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
 
-  function render(items){
+  let items = [];
+
+  function render(){
     if (!items.length) { list.innerHTML = '<div class="wishes-empty">كن أول من يبارك لنا</div>'; return; }
     list.innerHTML = items.map((w, i) =>
-      '<div class="wish" style="animation-delay:' + (i * 0.06) + 's">' +
+      '<div class="wish" style="animation-delay:' + Math.min(i * 0.06, .5) + 's">' +
         '<div class="who">' + esc(w.name) + '</div>' +
         '<div class="msg">' + esc(w.message) + '</div>' +
       '</div>').join("");
   }
 
+  // الطلب يبدأ فورًا مع تحميل الصفحة، وخدمة Apps Script بطيئة بطبعها (١-٣ ثوانٍ)
+  list.innerHTML = '<div class="wishes-empty">جارٍ تحميل المباركات…</div>';
+
   function load(){
-    fetch(URL_)
+    return fetch(URL_)
       .then(r => r.json())
-      .then(d => render(d.items || []))
-      .catch(() => { list.innerHTML = ""; });
+      .then(d => { items = d.items || []; render(); })
+      .catch(() => { if (!items.length) list.innerHTML = ""; });
   }
 
   btn.addEventListener("click", () => {
@@ -642,7 +647,9 @@ const autoScroll = (function(){
         if (!d.ok) throw new Error();
         status.textContent = "وصلتنا مباركتك، شكرًا لك ♡";
         nameEl.value = ""; msgEl.value = "";
-        setTimeout(load, 700);
+        items.unshift({ name, message });   // تظهر فورًا بدل انتظار الخادم
+        render();
+        setTimeout(load, 2500);             // مزامنة صامتة بعدها
       })
       .catch(() => { status.textContent = "تعذّر الإرسال، جرّب مرة أخرى."; })
       .finally(() => { btn.disabled = false; });
