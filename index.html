@@ -228,6 +228,27 @@ body.gated main *,body.gated #petal,body.gated footer *,body.gated #sound{
 #gate .gbtn:hover{transform:translateY(-2px);background:#242120}
 #gate .ghint{margin-top:16px;font-size:.75rem;color:var(--ink);opacity:.6}
 
+/* المباركات */
+.wish-form{display:flex;flex-direction:column;gap:12px;max-width:460px;margin:0 auto;position:relative;z-index:1}
+#wishesSection{position:relative;z-index:1}
+.wish-form input,.wish-form textarea{
+  font-family:"Tajawal",sans-serif;font-weight:400;font-size:1rem;color:var(--deep);
+  background:rgba(255,255,255,.85);border:1px solid var(--hair);padding:13px 15px;
+  border-radius:0;resize:none;transition:border-color .3s ease,background .3s ease;
+}
+.wish-form input:focus,.wish-form textarea:focus{outline:none;border-color:var(--deep);background:#fff}
+.wish-form input::placeholder,.wish-form textarea::placeholder{color:var(--ink);opacity:.45}
+.wish-form .hp{position:absolute;left:-9999px}
+.wish-status{margin-top:14px;font-size:.9rem;font-weight:500;min-height:22px;color:var(--ink)}
+.wishes{margin-top:44px;display:grid;gap:14px;text-align:right}
+.wish{
+  border:1px solid var(--hair);padding:18px 20px;background:rgba(255,255,255,.7);
+  opacity:0;transform:translateY(10px);animation:soft .7s ease forwards;
+}
+.wish .who{font-family:"Aref Ruqaa",serif;font-size:1.05rem;color:var(--deep);margin-bottom:4px}
+.wish .msg{font-size:.98rem;color:rgba(51,47,44,.88);line-height:1.9}
+.wishes-empty{margin-top:26px;font-size:.92rem;color:var(--ink);opacity:.65}
+
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
   .reveal{opacity:1;transform:none}
@@ -394,6 +415,21 @@ body.gated main *,body.gated #petal,body.gated footer *,body.gated #sound{
     </div>
   </div>
 </section>
+<section class="reveal" id="wishesSection" hidden>
+  <div class="eyebrow">المباركات</div>
+  <div class="hr"></div>
+  <p style="margin-bottom:26px">اترك لنا كلمة نقرأها في ليلتنا ونحتفظ بها بعدها.</p>
+
+  <div class="wish-form">
+    <input id="wishName" type="text" maxlength="40" placeholder="اسمك" autocomplete="name">
+    <textarea id="wishMsg" rows="3" maxlength="400" placeholder="مباركتك…"></textarea>
+    <input id="wishHp" class="hp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="btn solid" id="wishSend" type="button">أرسل المباركة</button>
+  </div>
+  <div class="wish-status" id="wishStatus"></div>
+
+  <div class="wishes" id="wishList"></div>
+</section>
 </main>
 
 <footer>
@@ -420,7 +456,8 @@ const CONFIG = {
   date:  new Date(2026, 9, 4, 19, 30),
   durationHours: 2,
   venueName: "صالة الشرق — القاعة الملوكية",
-  mapsUrl: "https://maps.app.goo.gl/jKaCx6DeTUYZWKoj7"
+  mapsUrl: "https://maps.app.goo.gl/jKaCx6DeTUYZWKoj7",
+  wishesUrl: "https://script.google.com/macros/s/AKfycbxB2Jq8d0ut5SpR0svf5vUeW5HeX3xMLq3uHeSvSQPa53jZXf-VkTYvUU3zi9Z8noMjSw/exec"
 };
 
 const $ = id => document.getElementById(id);
@@ -560,6 +597,58 @@ const autoScroll = (function(){
       requestAnimationFrame(frame);
     }
   };
+})();
+
+/* ═══ المباركات (Google Apps Script) ═══ */
+(function(){
+  const URL_ = CONFIG.wishesUrl;
+  if (!URL_) return;                       // بدون رابط يبقى القسم مخفيًا
+  const sec = $("wishesSection"), list = $("wishList"), status = $("wishStatus");
+  const nameEl = $("wishName"), msgEl = $("wishMsg"), hpEl = $("wishHp"), btn = $("wishSend");
+  sec.hidden = false;
+
+  const esc = s => String(s).replace(/[&<>"]/g, c =>
+    ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+
+  function render(items){
+    if (!items.length) { list.innerHTML = '<div class="wishes-empty">كن أول من يبارك لنا</div>'; return; }
+    list.innerHTML = items.map((w, i) =>
+      '<div class="wish" style="animation-delay:' + (i * 0.06) + 's">' +
+        '<div class="who">' + esc(w.name) + '</div>' +
+        '<div class="msg">' + esc(w.message) + '</div>' +
+      '</div>').join("");
+  }
+
+  function load(){
+    fetch(URL_)
+      .then(r => r.json())
+      .then(d => render(d.items || []))
+      .catch(() => { list.innerHTML = ""; });
+  }
+
+  btn.addEventListener("click", () => {
+    const name = nameEl.value.trim(), message = msgEl.value.trim();
+    if (hpEl.value) return;                                  // فخ للسبام
+    if (!name || !message) { status.textContent = "اكتب اسمك ومباركتك من فضلك."; return; }
+
+    btn.disabled = true; status.textContent = "جارٍ الإرسال…";
+    fetch(URL_, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },  // يتفادى preflight
+      body: JSON.stringify({ name, message })
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (!d.ok) throw new Error();
+        status.textContent = "وصلتنا مباركتك، شكرًا لك ♡";
+        nameEl.value = ""; msgEl.value = "";
+        setTimeout(load, 700);
+      })
+      .catch(() => { status.textContent = "تعذّر الإرسال، جرّب مرة أخرى."; })
+      .finally(() => { btn.disabled = false; });
+  });
+
+  load();
 })();
 
 const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add("in")), { threshold: .15 });
