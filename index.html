@@ -38,11 +38,11 @@
   --hair:rgba(51,47,44,.32);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden;max-width:100%}
 body{
   background:var(--paper);color:var(--ink);
   font-family:"Tajawal",system-ui,sans-serif;font-weight:400;line-height:2;
-  overflow-x:hidden;
+  overflow-x:hidden;max-width:100%;position:relative;
 }
 /* البتلة في الخلفية */
 #petal{
@@ -238,7 +238,10 @@ body.gated main *,body.gated #petal,body.gated footer *,body.gated #sound{
 }
 .wish-form input:focus,.wish-form textarea:focus{outline:none;border-color:var(--deep);background:#fff}
 .wish-form input::placeholder,.wish-form textarea::placeholder{color:var(--ink);opacity:.45}
-.wish-form .hp{position:absolute;left:-9999px}
+.wish-form .hp{
+  position:absolute;width:1px;height:1px;padding:0;border:0;margin:0;
+  opacity:0;pointer-events:none;overflow:hidden;clip-path:inset(50%);
+}
 .wish-status{margin-top:14px;font-size:.9rem;font-weight:500;min-height:22px;color:var(--ink)}
 .wishes{margin-top:44px;display:grid;gap:14px;text-align:right}
 .wish{
@@ -564,7 +567,7 @@ $("calBtn").addEventListener("click", () => {
 /* ═══ التمرير التلقائي ═══
    يمشي ببطء بعد فتح الدعوة، ويتوقف ٧ ثوانٍ إذا مرّر الزائر بنفسه. */
 const autoScroll = (function(){
-  const SPEED = 50;      // بكسل في الثانية
+  const SPEED = 60;      // بكسل في الثانية
   const PAUSE = 5000;    // مدة التوقف بعد تدخّل الزائر
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let running = false, resumeAt = 0, last = null, pos = 0;
