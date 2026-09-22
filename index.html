@@ -109,7 +109,7 @@ p+p{margin-top:12px}
 }
 .side{display:flex;flex-direction:column;align-items:center;gap:6px}
 .honor{font-size:clamp(.7rem,2.7vw,.95rem);font-weight:600;color:var(--ink);opacity:.7}
-.hname{font-family:"Aref Ruqaa",serif;font-size:clamp(.95rem,3.9vw,1.7rem);
+.hname{font-family:"Aref Ruqaa",serif;font-size:clamp(.95rem,3.9vw,1.8rem);
   color:var(--deep);line-height:1.6}
 .child{font-family:"Aref Ruqaa",serif;font-size:clamp(1.3rem,6.2vw,2.1rem);
   color:var(--deep);line-height:1.5}
@@ -231,6 +231,7 @@ body.gated main *,body.gated #petal,body.gated footer *,body.gated #sound{
 /* المباركات */
 .wish-form{display:flex;flex-direction:column;gap:12px;max-width:460px;margin:0 auto;position:relative;z-index:1}
 #wishesSection{position:relative;z-index:1}
+.wish-form[hidden]{display:none}
 .wish-form input,.wish-form textarea{
   font-family:"Tajawal",sans-serif;font-weight:400;font-size:1rem;color:var(--deep);
   background:rgba(255,255,255,.85);border:1px solid var(--hair);padding:13px 15px;
@@ -423,7 +424,7 @@ body.gated main *,body.gated #petal,body.gated footer *,body.gated #sound{
   <div class="hr"></div>
   <p style="margin-bottom:26px">اترك لنا كلمة نقرأها في ليلتنا ونحتفظ بها بعدها.</p>
 
-  <div class="wish-form">
+  <div class="wish-form" id="wishForm" hidden>
     <input id="wishName" type="text" maxlength="40" placeholder="اسمك" autocomplete="name">
     <textarea id="wishMsg" rows="3" maxlength="400" placeholder="مباركتك…"></textarea>
     <input id="wishHp" class="hp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -613,12 +614,20 @@ const autoScroll = (function(){
   if (!URL_) return;                       // بدون رابط يبقى القسم مخفيًا
   const sec = $("wishesSection"), list = $("wishList"), status = $("wishStatus");
   const nameEl = $("wishName"), msgEl = $("wishMsg"), hpEl = $("wishHp"), btn = $("wishSend");
+  const form = $("wishForm");
   sec.hidden = false;
 
   const esc = s => String(s).replace(/[&<>"]/g, c =>
     ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
 
   let items = [];
+
+  // توحيد الاسم للمقارنة: مسافات، حالة الأحرف، تشكيل، تطويل، أشكال الألف والياء والتاء
+  const norm = s => String(s).trim().toLowerCase()
+    .replace(/[\u064B-\u0652\u0640]/g, "")
+    .replace(/[أإآ]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه")
+    .replace(/\s+/g, " ");
+  const taken = name => items.some(w => norm(w.name) === norm(name));
 
   function render(){
     if (!items.length) { list.innerHTML = '<div class="wishes-empty">كن أول من يبارك لنا</div>'; return; }
@@ -635,14 +644,23 @@ const autoScroll = (function(){
   function load(){
     return fetch(URL_)
       .then(r => r.json())
-      .then(d => { items = d.items || []; render(); })
-      .catch(() => { if (!items.length) list.innerHTML = ""; });
+      .then(d => {
+        items = d.items || []; render();
+        form.hidden = false;               // النموذج يظهر فقط بعد نجاح التحميل
+      })
+      .catch(() => {
+        if (form.hidden) {                 // لم يكتمل التحميل الأول: أعد المحاولة
+          list.innerHTML = '<div class="wishes-empty">تعذّر تحميل المباركات، نعيد المحاولة…</div>';
+          setTimeout(load, 4000);
+        }
+      });
   }
 
   btn.addEventListener("click", () => {
     const name = nameEl.value.trim(), message = msgEl.value.trim();
     if (hpEl.value) return;                                  // فخ للسبام
     if (!name || !message) { status.textContent = "اكتب اسمك ومباركتك من فضلك."; return; }
+    if (taken(name)) { status.textContent = "هذا الاسم أرسل مباركة من قبل."; return; }
 
     btn.disabled = true; status.textContent = "جارٍ الإرسال…";
     fetch(URL_, {
