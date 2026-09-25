@@ -593,7 +593,9 @@ const autoScroll = (function(){
     // إن حرّك الزائر الصفحة أو ارتدّت بالزخم، تابعه بدل مصارعته
     if (Math.abs(window.scrollY - pos) > 2) pos = window.scrollY;
 
-    const wanted = (Date.now() < resumeAt || atBottom() || document.hidden) ? 0 : SPEED;
+    const ae = document.activeElement;
+    const typing = ae && (ae.tagName === "INPUT" || ae.tagName === "TEXTAREA");  // لا حركة والزائر يكتب
+    const wanted = (typing || Date.now() < resumeAt || atBottom() || document.hidden) ? 0 : SPEED;
     vel += (wanted - vel) * Math.min(1, dt / RAMP * 2.2);   // انتقال أسّي ناعم
 
     if (vel > 0.05) {
@@ -604,8 +606,8 @@ const autoScroll = (function(){
   }
 
   function hold(){ resumeAt = Date.now() + PAUSE; }
-  ["wheel","touchstart","touchmove","keydown","pointerdown"]
-    .forEach(e => addEventListener(e, hold, { passive:true }));
+  ["wheel","touchstart","touchmove","keydown","pointerdown","focusout"]
+    .forEach(e => addEventListener(e, hold, { passive:true }));   // focusout: مهلة بعد إغلاق لوحة المفاتيح
 
   return {
     start(){
@@ -646,22 +648,32 @@ const autoScroll = (function(){
       '</div>').join("");
   }
 
-  // الطلب يبدأ فورًا مع تحميل الصفحة، وخدمة Apps Script بطيئة بطبعها (١-٣ ثوانٍ)
-  list.innerHTML = '<div class="wishes-empty">جارٍ تحميل المباركات…</div>';
+  // آخر نسخة من المباركات محفوظة في المتصفح: تظهر فورًا للزائر العائد،
+  // ثم تُحدَّث بصمت من الخادم (Apps Script بطيء بطبعه ١-٣ ثوانٍ)
+  const CACHE = "wishes_v1";
+  const readCache = () => { try { return JSON.parse(localStorage.getItem(CACHE)); } catch(e) { return null; } };
+  const saveCache = () => { try { localStorage.setItem(CACHE, JSON.stringify(items)); } catch(e) {} };
 
+  const cached = readCache();
+  if (Array.isArray(cached)) { items = cached; render(); form.hidden = false; }
+  else list.innerHTML = '<div class="wishes-empty">جارٍ تحميل المباركات…</div>';
+
+  let tries = 0;
   function load(){
     const early = window.__wishesEarly;
     window.__wishesEarly = null;            // يُستخدم مرة واحدة فقط
     return (early || fetch(URL_).then(r => r.json()))
       .then(d => {
-        items = d.items || []; render();
-        form.hidden = false;               // النموذج يظهر فقط بعد نجاح التحميل
+        tries = 0;
+        const fresh = d.items || [];
+        if (JSON.stringify(fresh) !== JSON.stringify(items)) { items = fresh; render(); }  // لا إعادة رسم بلا تغيير
+        saveCache();
+        form.hidden = false;               // النموذج يظهر فقط بعد توفر القائمة
       })
       .catch(() => {
-        if (form.hidden) {                 // لم يكتمل التحميل الأول: أعد المحاولة
-          list.innerHTML = '<div class="wishes-empty">تعذّر تحميل المباركات، نعيد المحاولة…</div>';
-          setTimeout(load, 4000);
-        }
+        if (++tries > 3) return;           // لا محاولات بلا نهاية
+        if (form.hidden) list.innerHTML = '<div class="wishes-empty">تعذّر تحميل المباركات، نعيد المحاولة…</div>';
+        setTimeout(load, 4000);
       });
   }
 
@@ -683,7 +695,7 @@ const autoScroll = (function(){
         status.textContent = "وصلتنا مباركتك، شكرًا لك ♡";
         nameEl.value = ""; msgEl.value = "";
         items.unshift({ name, message });   // تظهر فورًا بدل انتظار الخادم
-        render();
+        render(); saveCache();
         setTimeout(load, 2500);             // مزامنة صامتة بعدها
       })
       .catch(() => { status.textContent = "تعذّر الإرسال، جرّب مرة أخرى."; })
