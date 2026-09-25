@@ -260,6 +260,14 @@ body.gated main *,body.gated #petal,body.gated footer *,body.gated #sound{
   .monogram .ring,.monogram .flourish{stroke-dashoffset:0}
 }
 </style>
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com">
+<script>
+  // تحميل المباركات يبدأ فور فتح الرابط — قبل الضغط على "افتح الدعوة" وقبل تحميل باقي الصفحة
+  window.WISHES_URL = "https://script.google.com/macros/s/AKfycbxB2Jq8d0ut5SpR0svf5vUeW5HeX3xMLq3uHeSvSQPa53jZXf-VkTYvUU3zi9Z8noMjSw/exec";
+  window.__wishesEarly = fetch(window.WISHES_URL).then(function(r){ return r.json(); });
+  window.__wishesEarly.catch(function(){});
+</script>
 </head>
 <body>
 
@@ -461,7 +469,7 @@ const CONFIG = {
   durationHours: 2,
   venueName: "صالة الشرق — القاعة الملوكية",
   mapsUrl: "https://maps.app.goo.gl/jKaCx6DeTUYZWKoj7",
-  wishesUrl: "https://script.google.com/macros/s/AKfycbxB2Jq8d0ut5SpR0svf5vUeW5HeX3xMLq3uHeSvSQPa53jZXf-VkTYvUU3zi9Z8noMjSw/exec"
+  wishesUrl: window.WISHES_URL
 };
 
 const $ = id => document.getElementById(id);
@@ -642,8 +650,9 @@ const autoScroll = (function(){
   list.innerHTML = '<div class="wishes-empty">جارٍ تحميل المباركات…</div>';
 
   function load(){
-    return fetch(URL_)
-      .then(r => r.json())
+    const early = window.__wishesEarly;
+    window.__wishesEarly = null;            // يُستخدم مرة واحدة فقط
+    return (early || fetch(URL_).then(r => r.json()))
       .then(d => {
         items = d.items || []; render();
         form.hidden = false;               // النموذج يظهر فقط بعد نجاح التحميل
