@@ -489,7 +489,7 @@ function setCell(k, v) {
 }
 function tick() {
   const diff = D - new Date();
-  if (diff <= 0) { $("count").outerHTML = '<div class="done">تمّ الزفاف بحمد الله ● شكرًا لحضوركم</div>'; clearInterval(timer); return; }
+  if (diff <= 0) { clearInterval(timer); $("count").innerHTML = '<div class="done">تمّ الزفاف بحمد الله ● شكرًا لحضوركم</div>'; return; }
   const sec = Math.floor(diff / 1000);
   setCell("d", Math.floor(sec / 86400));
   setCell("h", Math.floor(sec % 86400 / 3600));
@@ -684,7 +684,11 @@ const autoScroll = (function(){
   load();
 })();
 
-const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add("in")), { threshold: .15 });
+// الظهور عند دخول أي جزء من القسم للشاشة، لا نسبة من طوله —
+// القسم الطويل (المباركات) قد لا يبلغ أي نسبة مئوية من ارتفاعه على شاشة الجوال
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+}), { threshold: 0, rootMargin: "0px 0px -12% 0px" });
 document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 </script>
 </body>
