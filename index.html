@@ -504,7 +504,9 @@ function tick() {
   setCell("m", Math.floor(sec % 3600 / 60));
   setCell("s", sec % 60);
 }
-tick(); const timer = setInterval(tick, 1000);
+// المؤقت يُنشأ قبل أول استدعاء: بعد انتهاء الموعد يستدعي tick() الدالة clearInterval(timer) فورًا،
+// ولو لم يكن timer معرّفًا بعد لتوقف السكربت كله ولم يعمل زر "افتح الدعوة"
+const timer = setInterval(tick, 1000); tick();
 
 const utc = dt => dt.getUTCFullYear() + pad(dt.getUTCMonth() + 1) + pad(dt.getUTCDate()) + "T" + pad(dt.getUTCHours()) + pad(dt.getUTCMinutes()) + "00Z";
 const TITLE = "حفل زفاف " + CONFIG.groom + " و" + CONFIG.bride;
